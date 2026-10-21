@@ -318,7 +318,7 @@ async function save(){
 /* ---------- detail ---------- */
 function openDetail(id){
   const i=items.find(x=>x.id===id);if(!i)return;
-  closeSheets();selId=id;draw();
+  const keepEdit=editing,keepArmed=armed;closeSheets();editing=keepEdit;armed=keepArmed;selId=id;draw();
   const box=$("detailIn");box.textContent="";
   const d=new Date(i.ts);
   if(editing===id){
@@ -339,7 +339,7 @@ function openDetail(id){
     const left=document.createElement("div");left.className="btns";
     left.append(btn("고치기","quiet",()=>{editing=id;openDetail(id)}),
       btn(armed?"정말 지울까요?":"지우기",armed?"quiet danger":"quiet",async()=>{
-        if(!armed){armed=true;openDetail(id);armed=true;return}
+        if(!armed){armed=true;openDetail(id);return}
         closeSheets();try{await store.del(id);toast("지웠어요")}catch(e){toast("지우지 못했어요")}}));
     row.append(left,btn("닫기","quiet",closeSheets));box.appendChild(row);
   }
